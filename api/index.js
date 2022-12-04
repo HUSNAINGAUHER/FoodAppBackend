@@ -19,7 +19,7 @@ const app = express();
 // We are using this for the express-rate-limit middleware
 // See: https://github.com/nfriedly/express-rate-limit
 // app.enable('trust proxy');
-app.set('trust proxy', 1);
+app.set('trust proxy', 1); 
 
 app.use(express.json({ limit: '4mb' }));
 app.use(helmet());
