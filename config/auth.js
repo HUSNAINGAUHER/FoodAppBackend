@@ -13,9 +13,9 @@ const signInToken = (user) => {
       phone: user.phone,
       image: user.image,
     },
-    process.env.JWT_SECRET,
+    "alamsfdfsdsdfsdfsdfsdfsdfsdrafdar!@#$0fddlfjdfdfdssfds",
     {
-      expiresIn: '2d',
+      expiresIn: "2d",
     }
   );
 };
@@ -28,8 +28,8 @@ const tokenForVerify = (user) => {
       email: user.email,
       password: user.password,
     },
-    process.env.JWT_SECRET_FOR_VERIFY,
-    { expiresIn: '15m' }
+    "lfjfjasjfsdfsfr09ri09wfsdfsdfrilfdjdj",
+    { expiresIn: "15m" }
   );
 };
 
@@ -37,7 +37,10 @@ const isAuth = async (req, res, next) => {
   const { authorization } = req.headers;
   try {
     const token = authorization.split(' ')[1];
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(
+      token,
+      "alamsfdfsdsdfsdfsdfsdfsdfsdrafdar!@#$0fddlfjdfdfdssfds"
+    );
     req.user = decoded;
     next();
   } catch (err) {
