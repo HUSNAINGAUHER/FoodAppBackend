@@ -1,7 +1,7 @@
-require('dotenv').config();
-const jwt = require('jsonwebtoken');
-const nodemailer = require('nodemailer');
-const Admin = require('../models/Admin');
+require("dotenv").config();
+const jwt = require("jsonwebtoken");
+const nodemailer = require("nodemailer");
+const Admin = require("../models/Admin");
 
 const signInToken = (user) => {
   return jwt.sign(
@@ -36,7 +36,7 @@ const tokenForVerify = (user) => {
 const isAuth = async (req, res, next) => {
   const { authorization } = req.headers;
   try {
-    const token = authorization.split(' ')[1];
+    const token = authorization.split(" ")[1];
     const decoded = jwt.verify(
       token,
       "alamsfdfsdsdfsdfsdfsdfsdfsdrafdar!@#$0fddlfjdfdfdssfds"
@@ -51,12 +51,12 @@ const isAuth = async (req, res, next) => {
 };
 
 const isAdmin = async (req, res, next) => {
-  const admin = await Admin.findOne({ role: 'Admin' });
+  const admin = await Admin.findOne({ role: "Admin" });
   if (admin) {
     next();
   } else {
     res.status(401).send({
-      message: 'User is not Admin',
+      message: "User is not Admin",
     });
   }
 };
@@ -85,7 +85,7 @@ const sendEmail = (body, res, message) => {
       });
       console.log(err.message);
     } else {
-      console.log('Server is ready to take our messages');
+      console.log("Server is ready to take our messages");
     }
   });
 
