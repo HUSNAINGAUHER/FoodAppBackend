@@ -91,8 +91,6 @@ const loginUser = async (req, res) => {
   try {
     const user = await User.findOne({ email: req.body.registerEmail });
 
-    res.json(bcrypt.compareSync(req.body.password, user.password));
-    return;
     if (
       user &&
       user.password &&
