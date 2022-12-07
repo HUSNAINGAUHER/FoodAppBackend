@@ -39,7 +39,7 @@ const verifyEmailAddress = async (req, res) => {
 };
 
 const registerUser = async (req, res) => {
-  const token = req.params.token;
+  const token = req.body.token;
   console.log(token);
   console.log(jwt.decode(token));
   const { name, email, password, phone, image } = jwt.decode(token);
