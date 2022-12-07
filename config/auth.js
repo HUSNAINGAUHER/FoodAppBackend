@@ -41,9 +41,13 @@ const isAuth = async (req, res, next) => {
       token,
       "alamsfdfsdsdfsdfsdfsdfsdfsdrafdar!@#$0fddlfjdfdfdssfds"
     );
+
+    console.log(decoded);
     req.user = decoded;
     next();
   } catch (err) {
+    console.log(err);
+
     res.status(401).send({
       message: err.message,
     });
