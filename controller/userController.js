@@ -58,32 +58,36 @@ const registerUser = async (req, res) => {
   }
 
   if (token) {
-    jwt.verify(token, process.env.JWT_SECRET_FOR_VERIFY, (err, decoded) => {
-      if (err) {
-        return res.status(401).send({
-          message: "Token Expired, Please try again!",
-        });
-      } else {
-        const newUser = new User({
-          name,
-          email,
-          password: bcrypt.hashSync(password),
-          phone,
-          image,
-        });
-        newUser.save();
-        const token = signInToken(newUser);
-        res.cookie("secureCookie", token);
-        res.send({
-          token,
-          _id: newUser._id,
-          name: newUser.name,
-          email: newUser.email,
-          image: newUser.image,
-          message: "Email Verified, Please Login Now!",
-        });
+    jwt.verify(
+      token,
+      "lfjfjasjfsdfsfr09ri09wfsdfsdfrilfdjdj",
+      (err, decoded) => {
+        if (err) {
+          return res.status(401).send({
+            message: "Token Expired, Please try again!",
+          });
+        } else {
+          const newUser = new User({
+            name,
+            email,
+            password: bcrypt.hashSync(password),
+            phone,
+            image,
+          });
+          newUser.save();
+          const token = signInToken(newUser);
+          res.cookie("secureCookie", token);
+          res.send({
+            token,
+            _id: newUser._id,
+            name: newUser.name,
+            email: newUser.email,
+            image: newUser.image,
+            message: "Email Verified, Please Login Now!",
+          });
+        }
       }
-    });
+    );
   }
 };
 
