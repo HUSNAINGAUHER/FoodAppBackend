@@ -34,8 +34,10 @@ const tokenForVerify = (user) => {
 };
 
 const isAuth = async (req, res, next) => {
+  const { authorization } = req.headers;
+
   try {
-    const token = req.body.token;
+    const token = req.body.token ? req.body.token : authorization.split(" ")[1];
 
     const decoded = jwt.verify(
       token,
