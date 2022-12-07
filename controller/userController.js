@@ -89,9 +89,10 @@ const registerUser = async (req, res) => {
 
 const loginUser = async (req, res) => {
   try {
-    res.json(true);
-    return;
     const user = await User.findOne({ email: req.body.registerEmail });
+
+    res.json(user);
+    return;
 
     if (
       user &&
