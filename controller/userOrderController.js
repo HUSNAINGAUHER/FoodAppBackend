@@ -14,6 +14,7 @@ const addOrder = async (req, res) => {
     const newOrder = new Order({
       ...req.body,
       status: "Pending",
+      address: address || "-",
       user: req.user._id,
     });
     const order = await newOrder.save();
