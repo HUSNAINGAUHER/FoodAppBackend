@@ -34,15 +34,13 @@ const tokenForVerify = (user) => {
 };
 
 const isAuth = async (req, res, next) => {
-  const { authorization } = req.headers;
   try {
-    const token = authorization.split(" ")[1];
+    const token = req.body.token;
+
     const decoded = jwt.verify(
       token,
       "alamsfdfsdsdfsdfsdfsdfsdfsdrafdar!@#$0fddlfjdfdfdssfds"
     );
-
-    console.log(decoded);
     req.user = decoded;
     next();
   } catch (err) {

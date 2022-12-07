@@ -14,13 +14,15 @@ const addOrder = async (req, res) => {
     const newOrder = new Order({
       ...req.body,
       status: "Pending",
-      address: address || "-",
+      address: req.address || "-",
       user: req.user._id,
     });
+
     const order = await newOrder.save();
     res.status(201).send(order);
     handleProductQuantity(order.cart);
   } catch (err) {
+    console.log(err);
     res.status(500).send({
       message: err.message,
     });
