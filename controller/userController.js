@@ -39,55 +39,66 @@ const verifyEmailAddress = async (req, res) => {
 };
 
 const registerUser = async (req, res) => {
-  const token = req.body.token;
-  console.log(token);
-  console.log(jwt.decode(token));
-  const { name, email, password, phone, image } = jwt.decode(token);
-  const isAdded = await User.findOne({ email: email });
-  console.log(isAdded);
-  if (isAdded) {
-    const token = signInToken(isAdded);
-    return res.send({
-      token,
-      name: isAdded.name,
-      email: isAdded.email,
-      phone: isAdded.phone,
-      image: isAdded.image,
-      message: "Email Already Verified!",
-    });
-  }
+  try {
+    const token = req.body.token;
 
-  if (token) {
-    jwt.verify(
-      token,
-      "lfjfjasjfsdfsfr09ri09wfsdfsdfrilfdjdj",
-      (err, decoded) => {
-        if (err) {
-          return res.status(401).send({
-            message: "Token Expired, Please try again!",
-          });
-        } else {
-          const newUser = new User({
-            name,
-            email,
-            password: bcrypt.hashSync(password),
-            phone,
-            image,
-          });
-          newUser.save();
-          const token = signInToken(newUser);
-          res.cookie("secureCookie", token);
-          res.send({
-            token,
-            _id: newUser._id,
-            name: newUser.name,
-            email: newUser.email,
-            image: newUser.image,
-            message: "Email Verified, Please Login Now!",
-          });
+    const { name, email, password, phone, image, address, zipCode } =
+      jwt.decode(token);
+    const isAdded = await User.findOne({ email: email });
+
+    if (isAdded) {
+      const token = signInToken(isAdded);
+      return res.send({
+        token,
+        name: isAdded.name,
+        email: isAdded.email,
+        phone: isAdded.phone,
+        image: isAdded.image,
+        address: isAdded.address,
+        zipCode: isAdded.zipCode,
+        message: "Email Already Verified!",
+      });
+    }
+
+    if (token) {
+      jwt.verify(
+        token,
+        "lfjfjasjfsdfsfr09ri09wfsdfsdfrilfdjdj",
+        (err, decoded) => {
+          if (err) {
+            return res.status(401).send({
+              message: "Token Expired, Please try again!",
+            });
+          } else {
+            const newUser = new User({
+              name,
+              email,
+              password: bcrypt.hashSync(password),
+              phone,
+              image,
+              zipCode: zipCode,
+              address,
+            });
+            newUser.save();
+            const token = signInToken(newUser);
+            res.cookie("secureCookie", token);
+            res.send({
+              token,
+              _id: newUser._id,
+              name: newUser.name,
+              email: newUser.email,
+              image: newUser.image,
+              phone: newUser.phone,
+              address: newUser.address,
+              zip: newUser.zipCode,
+              message: "Email Verified, Please Login Now!",
+            });
+          }
         }
-      }
-    );
+      );
+    }
+  } catch (err) {
+    console.log(err);
   }
 };
 
@@ -273,6 +284,7 @@ const updateUser = async (req, res) => {
       user.address = req.body.address;
       user.phone = req.body.phone;
       user.image = req.body.image;
+      user.zipCode = req.body.zipCode;
       const updatedUser = await user.save();
       const token = signInToken(updatedUser);
       res.send({
@@ -283,6 +295,7 @@ const updateUser = async (req, res) => {
         address: updatedUser.address,
         phone: updatedUser.phone,
         image: updatedUser.image,
+        zipCode: updatedUser.zipCode,
       });
     }
   } catch (err) {

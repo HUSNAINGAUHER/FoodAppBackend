@@ -11,6 +11,8 @@ const orderRoutes = require("../routes/orderRoutes");
 const userOrderRoutes = require("../routes/userOrderRoutes");
 const categoryRoutes = require("../routes/categoryRoutes");
 const couponRoutes = require("../routes/couponRoutes");
+const distribution = require("../routes/distributionRoutes");
+
 const { isAuth, isAdmin } = require("../config/auth");
 
 connectDB();
@@ -40,6 +42,7 @@ app.use("/api/order/", isAuth, userOrderRoutes);
 //if you not use admin dashboard then these two route will not needed.
 app.use("/api/admin/", adminRoutes);
 app.use("/api/orders/", isAuth, orderRoutes);
+app.use("/api/distribution/", distribution);
 
 // Use express's default error handling middleware
 app.use((err, req, res, next) => {
