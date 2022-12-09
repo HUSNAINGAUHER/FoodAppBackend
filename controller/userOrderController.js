@@ -11,10 +11,11 @@ const {
 
 const addOrder = async (req, res) => {
   try {
+    console.log(req.body);
     const newOrder = new Order({
       ...req.body,
       status: "Pending",
-      address: req.address || "-",
+      address: req.body.address || "-",
       user: req.user._id,
     });
 

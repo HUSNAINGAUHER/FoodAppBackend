@@ -105,7 +105,7 @@ const registerUser = async (req, res) => {
 const loginUser = async (req, res) => {
   try {
     const user = await User.findOne({ email: req.body.registerEmail });
-
+    console.log(user);
     if (
       user &&
       user.password &&
