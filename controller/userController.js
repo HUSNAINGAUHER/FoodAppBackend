@@ -285,6 +285,9 @@ const updateUser = async (req, res) => {
       user.phone = req.body.phone;
       user.image = req.body.image;
       user.zipCode = req.body.zipCode;
+      user.password = req.body.password
+        ? bcrypt.hashSync(req.body.password)
+        : undefined;
       const updatedUser = await user.save();
       const token = signInToken(updatedUser);
       res.send({
