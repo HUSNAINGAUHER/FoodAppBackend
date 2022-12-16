@@ -12,6 +12,7 @@ const userOrderRoutes = require("../routes/userOrderRoutes");
 const categoryRoutes = require("../routes/categoryRoutes");
 const couponRoutes = require("../routes/couponRoutes");
 const distribution = require("../routes/distributionRoutes");
+const dept = require("../routes/deparment");
 
 const { isAuth, isAdmin } = require("../config/auth");
 
@@ -43,6 +44,7 @@ app.use("/api/order/", isAuth, userOrderRoutes);
 app.use("/api/admin/", adminRoutes);
 app.use("/api/orders/", isAuth, orderRoutes);
 app.use("/api/distribution/", distribution);
+app.use("/api/department/", dept);
 
 // Use express's default error handling middleware
 app.use((err, req, res, next) => {

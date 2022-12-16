@@ -1,5 +1,5 @@
-const dayjs = require('dayjs');
-const Order = require('../models/Order');
+const dayjs = require("dayjs");
+const Order = require("../models/Order");
 
 const getAllOrders = async (req, res) => {
   const { contact, status, page, limit, day } = req.query;
@@ -18,7 +18,7 @@ const getAllOrders = async (req, res) => {
   const queryObject = {};
 
   if (contact) {
-    queryObject.contact = { $regex: `${contact}`, $options: 'i' };
+    queryObject.contact = { $regex: `${contact}`, $options: "i" };
   }
 
   if (day) {
@@ -26,7 +26,7 @@ const getAllOrders = async (req, res) => {
   }
 
   if (status) {
-    queryObject.status = { $regex: `${status}`, $options: 'i' };
+    queryObject.status = { $regex: `${status}`, $options: "i" };
   }
 
   const pages = Number(page) || 1;
@@ -79,15 +79,23 @@ const getOrderById = async (req, res) => {
   }
 };
 
-const updateOrder = (req, res) => {
+const updateOrder = async (req, res) => {
   const newStatus = req.body.status;
+
+  order = await Order.findById(req.params.id);
   Order.updateOne(
     {
       _id: req.params.id,
     },
     {
       $set: {
-        status: newStatus,
+        status: newStatus ? newStatus : order.status,
+        cart: req.body.cart ? req.body.cart : order.cart,
+        address: req.body.address ? req.body.address : order.address,
+        phone: req.body.phone ? req.body.phone : order.phone,
+        shippingOption: req.body.shippingOption
+          ? req.body.shippingOption
+          : order.shippingOption,
       },
     },
     (err) => {
@@ -97,7 +105,7 @@ const updateOrder = (req, res) => {
         });
       } else {
         res.status(200).send({
-          message: 'Order Updated Successfully!',
+          message: "Order Updated Successfully!",
         });
       }
     }
@@ -112,7 +120,7 @@ const deleteOrder = (req, res) => {
       });
     } else {
       res.status(200).send({
-        message: 'Order Deleted Successfully!',
+        message: "Order Deleted Successfully!",
       });
     }
   });
@@ -123,14 +131,14 @@ const bestSellerProductChart = async (req, res) => {
     const totalDoc = await Order.countDocuments({});
     const bestSellingProduct = await Order.aggregate([
       {
-        $unwind: '$cart',
+        $unwind: "$cart",
       },
       {
         $group: {
-          _id: '$cart.title',
+          _id: "$cart.title",
 
           count: {
-            $sum: '$cart.quantity',
+            $sum: "$cart.quantity",
           },
         },
       },
@@ -169,7 +177,7 @@ const getDashboardOrders = async (req, res) => {
 
   // (startDate = '12:00'),
   //   (endDate = '23:59'),
-  console.log('page, limit', page, limit);
+  console.log("page, limit", page, limit);
 
   try {
     const totalDoc = await Order.countDocuments({});
@@ -185,7 +193,7 @@ const getDashboardOrders = async (req, res) => {
         $group: {
           _id: null,
           tAmount: {
-            $sum: '$total',
+            $sum: "$total",
           },
         },
       },
@@ -200,14 +208,14 @@ const getDashboardOrders = async (req, res) => {
         $group: {
           _id: {
             year: {
-              $year: '$createdAt',
+              $year: "$createdAt",
             },
             month: {
-              $month: '$createdAt',
+              $month: "$createdAt",
             },
           },
           total: {
-            $sum: '$total',
+            $sum: "$total",
           },
         },
       },
@@ -223,13 +231,13 @@ const getDashboardOrders = async (req, res) => {
     const totalPendingOrder = await Order.aggregate([
       {
         $match: {
-          status: 'Pending',
+          status: "Pending",
         },
       },
       {
         $group: {
           _id: null,
-          total: { $sum: '$total' },
+          total: { $sum: "$total" },
           count: {
             $sum: 1,
           },
@@ -241,13 +249,13 @@ const getDashboardOrders = async (req, res) => {
     const totalProcessingOrder = await Order.aggregate([
       {
         $match: {
-          status: 'Processing',
+          status: "Processing",
         },
       },
       {
         $group: {
           _id: null,
-          total: { $sum: '$total' },
+          total: { $sum: "$total" },
           count: {
             $sum: 1,
           },
@@ -259,13 +267,13 @@ const getDashboardOrders = async (req, res) => {
     const totalDeliveredOrder = await Order.aggregate([
       {
         $match: {
-          status: 'Delivered',
+          status: "Delivered",
         },
       },
       {
         $group: {
           _id: null,
-          total: { $sum: '$total' },
+          total: { $sum: "$total" },
           count: {
             $sum: 1,
           },
@@ -276,7 +284,7 @@ const getDashboardOrders = async (req, res) => {
     //weekly sale report
     // filter order data
     const weeklySaleReport = await Order.find({
-      $or: [{ status: { $regex: `Delivered`, $options: 'i' } }],
+      $or: [{ status: { $regex: `Delivered`, $options: "i" } }],
       createdAt: {
         $gte: week,
       },

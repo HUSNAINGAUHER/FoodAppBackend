@@ -1,14 +1,14 @@
-const Product = require('../models/Product');
+const Product = require("../models/Product");
 
 const addProduct = async (req, res) => {
   try {
     const newProduct = new Product(req.body);
     await newProduct.save();
     res.status(200).send({
-      message: 'Product Added Successfully!',
+      message: "Product Added Successfully!",
     });
   } catch (err) {
-    console.log(err)
+    console.log(err);
     res.status(500).send({
       message: err.message,
     });
@@ -20,7 +20,7 @@ const addAllProducts = async (req, res) => {
     await Product.deleteMany();
     await Product.insertMany(req.body);
     res.status(200).send({
-      message: 'Product Added successfully!',
+      message: "Product Added successfully!",
     });
   } catch (err) {
     res.status(500).send({
@@ -31,7 +31,7 @@ const addAllProducts = async (req, res) => {
 
 const getShowingProducts = async (req, res) => {
   try {
-    const products = await Product.find({ status: 'Show' }).sort({ _id: -1 });
+    const products = await Product.find({ status: "Show" }).sort({ _id: -1 });
     res.send(products);
   } catch (err) {
     res.status(500).send({
@@ -42,7 +42,9 @@ const getShowingProducts = async (req, res) => {
 
 const getShowingCategory = async (req, res) => {
   try {
-    const products = await Product.find({ parent : req.query.parent}).sort({ _id: -1 });
+    const products = await Product.find({ parent: req.query.parent }).sort({
+      _id: -1,
+    });
     res.send(products);
   } catch (err) {
     res.status(500).send({
@@ -72,10 +74,10 @@ const getAllProducts = async (req, res) => {
   let sortPrice;
 
   if (title) {
-    queryObject.$or = [{ title: { $regex: `${title}`, $options: 'i' } }];
+    queryObject.$or = [{ title: { $regex: `${title}`, $options: "i" } }];
   }
 
-  if (price === 'Low') {
+  if (price === "Low") {
     sortPrice = 1;
   } else {
     sortPrice = -1;
@@ -83,7 +85,7 @@ const getAllProducts = async (req, res) => {
 
   if (category) {
     // queryObject.category = { $regex: category, $options: 'i' };
-    queryObject.parent = { $regex: category, $options: 'i' };
+    queryObject.parent = { $regex: category, $options: "i" };
   }
 
   const pages = Number(page);
@@ -164,8 +166,9 @@ const updateProduct = async (req, res) => {
       product.discount = req.body.discount;
       product.image = req.body.image;
       product.tag = req.body.tag;
+      product.department = req.body.department;
       await product.save();
-      res.send({ data: product, message: 'Product updated successfully!' });
+      res.send({ data: product, message: "Product updated successfully!" });
     }
     // handleProductStock(product);
   } catch (err) {
@@ -204,7 +207,7 @@ const deleteProduct = (req, res) => {
       });
     } else {
       res.status(200).send({
-        message: 'Product Deleted Successfully!',
+        message: "Product Deleted Successfully!",
       });
     }
   });

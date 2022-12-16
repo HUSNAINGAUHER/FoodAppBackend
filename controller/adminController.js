@@ -1,17 +1,17 @@
-const bcrypt = require('bcryptjs');
-const dayjs = require('dayjs');
-const utc = require('dayjs/plugin/utc');
+const bcrypt = require("bcryptjs");
+const dayjs = require("dayjs");
+const utc = require("dayjs/plugin/utc");
 dayjs.extend(utc);
-const jwt = require('jsonwebtoken');
-const { signInToken, tokenForVerify, sendEmail } = require('../config/auth');
-const Admin = require('../models/Admin');
+const jwt = require("jsonwebtoken");
+const { signInToken, tokenForVerify, sendEmail } = require("../config/auth");
+const Admin = require("../models/Admin");
 
 const registerAdmin = async (req, res) => {
   try {
     const isAdded = await Admin.findOne({ email: req.body.email });
     if (isAdded) {
       return res.status(403).send({
-        message: 'This Email already Added!',
+        message: "This Email already Added!",
       });
     } else {
       const newStaff = new Admin({
@@ -53,7 +53,7 @@ const loginAdmin = async (req, res) => {
       });
     } else {
       res.status(401).send({
-        message: 'Invalid Email or password!',
+        message: "Invalid Email or password!",
       });
     }
   } catch (err) {
@@ -67,14 +67,14 @@ const forgetPassword = async (req, res) => {
   const isAdded = await Admin.findOne({ email: req.body.verifyEmail });
   if (!isAdded) {
     return res.status(404).send({
-      message: 'Admin/Staff Not found with this email!',
+      message: "Admin/Staff Not found with this email!",
     });
   } else {
     const token = tokenForVerify(isAdded);
     const body = {
       from: process.env.EMAIL_USER,
       to: `${req.body.verifyEmail}`,
-      subject: 'Password Reset',
+      subject: "Password Reset",
       html: `<h2>Hello ${req.body.verifyEmail}</h2>
       <p>A request has been received to change the password for your <strong>Dashtar</strong> account </p>
 
@@ -91,7 +91,7 @@ const forgetPassword = async (req, res) => {
         <strong>Dashtar Team</strong>
              `,
     };
-    const message = 'Please check your email to reset password!';
+    const message = "Please check your email to reset password!";
     sendEmail(body, res, message);
   }
 };
@@ -105,13 +105,13 @@ const resetPassword = async (req, res) => {
     jwt.verify(token, process.env.JWT_SECRET_FOR_VERIFY, (err, decoded) => {
       if (err) {
         return res.status(500).send({
-          message: 'Token expired, please try again!',
+          message: "Token expired, please try again!",
         });
       } else {
         staff.password = bcrypt.hashSync(req.body.newPassword);
         staff.save();
         res.send({
-          message: 'Your password change successful, you can login now!',
+          message: "Your password change successful, you can login now!",
         });
       }
     });
@@ -121,9 +121,9 @@ const resetPassword = async (req, res) => {
 const addStaff = async (req, res) => {
   try {
     const isAdded = await Admin.find({ email: req.body.data.email });
-    if (isAdded) {
+    if (isAdded.length) {
       return res.status(500).send({
-        message: 'This Email already Added!',
+        message: "This Email already Added!",
       });
     } else {
       const newStaff = new Admin({
@@ -137,10 +137,11 @@ const addStaff = async (req, res) => {
       });
       await newStaff.save();
       res.status(200).send({
-        message: 'Staff Added Successfully!',
+        message: "Staff Added Successfully!",
       });
     }
   } catch (err) {
+    console.log(err);
     res.status(500).send({
       message: err.message,
     });
@@ -177,7 +178,7 @@ const updateStaff = async (req, res) => {
       admin.role = req.body.data.role;
       admin.joiningData = dayjs().utc().format(req.body.data.joiningDate);
       admin.password =
-        req.body.data.password !== ('' || undefined)
+        req.body.data.password !== ("" || undefined)
           ? bcrypt.hashSync(req.body.data.password)
           : admin.password;
       admin.image = req.body.data.image;
@@ -206,7 +207,7 @@ const deleteStaff = (req, res) => {
       });
     } else {
       res.status(200).send({
-        message: 'Admin Deleted Successfully!',
+        message: "Admin Deleted Successfully!",
       });
     }
   });
