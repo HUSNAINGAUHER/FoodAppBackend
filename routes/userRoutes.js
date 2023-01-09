@@ -12,6 +12,7 @@ const {
   getUserById,
   updateUser,
   deleteUser,
+  updateUserStatus,
 } = require("../controller/userController");
 const {
   passwordVerificationLimit,
@@ -47,6 +48,7 @@ router.get("/:id", getUserById);
 
 //update a user
 router.put("/:id", updateUser);
+router.patch("/:id", updateUserStatus);
 
 //delete a user
 router.delete("/:id", deleteUser);

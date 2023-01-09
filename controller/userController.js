@@ -42,8 +42,10 @@ const registerUser = async (req, res) => {
   try {
     const token = req.body.token;
 
-    const { name, email, password, phone, image, address, zipCode } =
+    const { name, email, password, phone, image, address, zipCode, verified } =
       jwt.decode(token);
+
+    console.log(image, name, email, password, phone);
     const isAdded = await User.findOne({ email: email });
 
     if (isAdded) {
@@ -78,7 +80,9 @@ const registerUser = async (req, res) => {
               image,
               zipCode: zipCode,
               address,
+              verified: verified,
             });
+            console.log(newUser);
             newUser.save();
             const token = signInToken(newUser);
             res.cookie("secureCookie", token);
@@ -105,7 +109,12 @@ const registerUser = async (req, res) => {
 const loginUser = async (req, res) => {
   try {
     const user = await User.findOne({ email: req.body.registerEmail });
-    console.log(user);
+    if (!user.verified) {
+      res.status(500).send({
+        message: "User not verified",
+      });
+      return;
+    }
     if (
       user &&
       user.password &&
@@ -309,6 +318,30 @@ const updateUser = async (req, res) => {
   }
 };
 
+const updateUserStatus = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (user) {
+      user.verified = req.body.verified;
+      const updatedUser = await user.save();
+      const token = signInToken(updatedUser);
+      res.send({
+        token,
+        _id: updatedUser._id,
+        name: updatedUser.name,
+        email: updatedUser.email,
+        address: updatedUser.address,
+        phone: updatedUser.phone,
+        image: updatedUser.image,
+        zipCode: updatedUser.zipCode,
+      });
+    }
+  } catch (err) {
+    res.status(404).send({
+      message: "Your email is not valid!",
+    });
+  }
+};
 const deleteUser = (req, res) => {
   User.deleteOne({ _id: req.params.id }, (err) => {
     if (err) {
@@ -335,4 +368,5 @@ module.exports = {
   getUserById,
   updateUser,
   deleteUser,
+  updateUserStatus,
 };
