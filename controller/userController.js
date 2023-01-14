@@ -109,7 +109,7 @@ const registerUser = async (req, res) => {
 const loginUser = async (req, res) => {
   try {
     const user = await User.findOne({ email: req.body.registerEmail });
-    if (!user.verified) {
+    if (user && !user.verified) {
       res.status(500).send({
         message: "User not verified",
       });
