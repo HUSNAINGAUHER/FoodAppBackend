@@ -40,6 +40,15 @@ const registerAdmin = async (req, res) => {
 
 const loginAdmin = async (req, res) => {
   try {
+    // const newStaff = new Admin({
+    //   name: "admin",
+    //   email: "husnain@gmail.com",
+    //   role: "admin",
+    //   password: bcrypt.hashSync("12345678"),
+    // });
+
+    // const d = await newStaff.save();
+    // console.log(d);
     const admin = await Admin.findOne({ email: req.body.email });
     if (admin && bcrypt.compareSync(req.body.password, admin.password)) {
       const token = signInToken(admin);

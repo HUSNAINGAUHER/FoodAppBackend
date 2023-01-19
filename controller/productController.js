@@ -166,7 +166,7 @@ const updateProduct = async (req, res) => {
       product.discount = req.body.discount;
       product.image = req.body.image;
       product.tag = req.body.tag;
-      product.department = req.body.department;
+      product.department = JSON.parse(req.body.department);
       await product.save();
       res.send({ data: product, message: "Product updated successfully!" });
     }

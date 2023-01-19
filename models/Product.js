@@ -51,7 +51,7 @@ const productSchema = new mongoose.Schema(
 
     description: {
       type: String,
-      required: true,
+      required: false,
     },
     type: {
       type: String,
@@ -72,7 +72,7 @@ const productSchema = new mongoose.Schema(
     },
 
     department: {
-      type: String,
+      type: [String],
       required: true,
     },
   },
