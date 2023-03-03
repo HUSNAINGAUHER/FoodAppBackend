@@ -52,7 +52,7 @@ app.use((err, req, res, next) => {
   res.status(400).json({ message: err.message });
 });
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5055;
 
 // app.listen(PORT, () => console.log(`server running on port ${PORT}`));
 

@@ -12,6 +12,7 @@ const signInToken = (user) => {
       address: user.address,
       phone: user.phone,
       image: user.image,
+      baby: user.baby,
     },
     "alamsfdfsdsdfsdfsdfsdfsdfsdrafdar!@#$0fddlfjdfdfdssfds",
     {

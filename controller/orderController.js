@@ -82,6 +82,7 @@ const getOrderById = async (req, res) => {
 const updateOrder = async (req, res) => {
   const newStatus = req.body.status;
 
+  console.log(res.body);
   order = await Order.findById(req.params.id);
   Order.updateOne(
     {
@@ -106,6 +107,7 @@ const updateOrder = async (req, res) => {
       } else {
         res.status(200).send({
           message: "Order Updated Successfully!",
+          ...order._doc,
         });
       }
     }

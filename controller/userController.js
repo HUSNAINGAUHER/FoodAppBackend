@@ -42,10 +42,19 @@ const registerUser = async (req, res) => {
   try {
     const token = req.body.token;
 
-    const { name, email, password, phone, image, address, zipCode, verified } =
-      jwt.decode(token);
+    const {
+      name,
+      email,
+      password,
+      phone,
+      image,
+      address,
+      zipCode,
+      verified,
+      baby,
+    } = jwt.decode(token);
 
-    console.log(image, name, email, password, phone);
+    console.log(baby);
     const isAdded = await User.findOne({ email: email });
 
     if (isAdded) {
@@ -81,6 +90,7 @@ const registerUser = async (req, res) => {
               zipCode: zipCode,
               address,
               verified: verified,
+              baby,
             });
             console.log(newUser);
             newUser.save();
@@ -95,6 +105,7 @@ const registerUser = async (req, res) => {
               phone: newUser.phone,
               address: newUser.address,
               zip: newUser.zipCode,
+              baby: newUser.baby,
               message: "Email Verified, Please Login Now!",
             });
           }
@@ -129,6 +140,7 @@ const loginUser = async (req, res) => {
         address: user.address,
         phone: user.phone,
         image: user.image,
+        baby: user.baby,
       });
     } else {
       res.status(401).send({
@@ -287,6 +299,11 @@ const getUserById = async (req, res) => {
 const updateUser = async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
+    console.log(
+      req.body.password,
+      user.password,
+      req.body.password === user.password
+    );
     if (user) {
       user.name = req.body.name;
       user.email = req.body.email;
@@ -294,10 +311,11 @@ const updateUser = async (req, res) => {
       user.phone = req.body.phone;
       user.image = req.body.image ? req.body.image : user.image;
       user.zipCode = req.body.zipCode;
+      user.baby = req.body.baby;
       user.password =
-        req.body.password !== user.password
-          ? bcrypt.hashSync(req.body.password)
-          : user.password;
+        req.body.password === user.password
+          ? user.password
+          : bcrypt.hashSync(req.body.password);
       const updatedUser = await user.save();
       const token = signInToken(updatedUser);
       res.send({
@@ -309,6 +327,7 @@ const updateUser = async (req, res) => {
         phone: updatedUser.phone,
         image: updatedUser.image,
         zipCode: updatedUser.zipCode,
+        baby: updateUser.baby,
       });
     }
   } catch (err) {

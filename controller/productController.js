@@ -66,15 +66,43 @@ const getDiscountedProducts = async (req, res) => {
   }
 };
 
+const getAllProduct = async (req, res) => {
+  const products = await Product.find();
+  const search = req.query.search;
+
+  if (search) {
+    const p = products.filter(
+      (v) =>
+        v.title
+          .toLowerCase()
+          .replace("-", "")
+          .replace("'", "")
+          .includes(search.toLowerCase()) ||
+        similarity(v.title.toLowerCase(), search.toLowerCase()) > 0.5 ||
+        search === ""
+    );
+    res.send(p);
+  } else {
+    res.send([]);
+  }
+};
+
 const getAllProducts = async (req, res) => {
-  const { title, category, price, page, limit } = req.query;
+  const { title, category, price, page, limit, department } = req.query;
 
   const queryObject = {};
 
   let sortPrice;
 
+  if (department) {
+    queryObject.department = { $regex: department, $options: "i" };
+  }
   if (title) {
-    queryObject.$or = [{ title: { $regex: `${title}`, $options: "i" } }];
+    queryObject.$or = [{ title: { $regex: `^${title}`, $options: "m" } }];
+  }
+
+  if (title && !page) {
+    queryObject.$or = [{ title: { $regex: `^${title}`, $options: "m" } }];
   }
 
   if (price === "Low") {
@@ -87,6 +115,8 @@ const getAllProducts = async (req, res) => {
     // queryObject.category = { $regex: category, $options: 'i' };
     queryObject.parent = { $regex: category, $options: "i" };
   }
+
+  console.log(queryObject);
 
   const pages = Number(page);
   const limits = Number(limit);
@@ -226,4 +256,5 @@ module.exports = {
   updateStatus,
   deleteProduct,
   getShowingCategory,
+  getAllProduct,
 };

@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const categorySchema = new mongoose.Schema({
   parent: {
@@ -20,11 +20,21 @@ const categorySchema = new mongoose.Schema({
   children: [{}],
   status: {
     type: String,
-    enum: ['Show', 'Hide'],
-    default: 'Show',
+    enum: ["Show", "Hide"],
+    default: "Show",
+  },
+
+  limit: {
+    type: String,
+    required: true,
+  },
+
+  baby: {
+    type: Boolean,
+    required: true,
   },
 });
 
-const Category = mongoose.model('Category', categorySchema);
+const Category = mongoose.model("Category", categorySchema);
 
 module.exports = Category;

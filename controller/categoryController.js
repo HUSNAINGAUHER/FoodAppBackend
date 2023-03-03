@@ -1,11 +1,11 @@
-const Category = require('../models/Category');
+const Category = require("../models/Category");
 
 const addCategory = async (req, res) => {
   try {
     const newCategory = new Category(req.body);
     await newCategory.save();
     res.status(200).send({
-      message: 'Category Added Successfully!',
+      message: "Category Added Successfully!",
     });
   } catch (err) {
     res.status(500).send({
@@ -18,7 +18,7 @@ const addAllCategory = async (req, res) => {
   try {
     await Category.insertMany(req.body);
     res.status(200).send({
-      message: 'Category Added successfully!',
+      message: "Category Added successfully!",
     });
   } catch (err) {
     res.status(500).send({
@@ -29,7 +29,7 @@ const addAllCategory = async (req, res) => {
 
 const getShowingCategory = async (req, res) => {
   try {
-    const categories = await Category.find({ status: 'Show' }).sort({
+    const categories = await Category.find({ status: "Show" }).sort({
       _id: -1,
     });
     res.send(categories);
@@ -71,11 +71,13 @@ const updateCategory = async (req, res) => {
       category.type = req.body.type;
       category.icon = req.body.icon;
       category.children = req.body.children;
+      category.limit = req.body.limit;
+      category.baby = req.body.baby === "Yes";
       await category.save();
-      res.send({ message: 'Category Updated Successfully!' });
+      res.send({ message: "Category Updated Successfully!" });
     }
   } catch (err) {
-    res.status(404).send({ message: 'Category not found!' });
+    res.status(404).send({ message: "Category not found!" });
   }
 };
 
@@ -111,7 +113,7 @@ const deleteCategory = (req, res) => {
       });
     } else {
       res.status(200).send({
-        message: 'Category Deleted Successfully!',
+        message: "Category Deleted Successfully!",
       });
     }
   });
