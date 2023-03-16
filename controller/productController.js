@@ -98,11 +98,11 @@ const getAllProducts = async (req, res) => {
     queryObject.department = { $regex: department, $options: "i" };
   }
   if (title) {
-    queryObject.$or = [{ title: { $regex: `^${title}`, $options: "m" } }];
+    queryObject.$or = [{ title: { $regex: `${title}`, $options: "i" } }];
   }
 
   if (title && !page) {
-    queryObject.$or = [{ title: { $regex: `^${title}`, $options: "m" } }];
+    queryObject.$or = [{ title: { $regex: `${title}`, $options: "i" } }];
   }
 
   if (price === "Low") {
